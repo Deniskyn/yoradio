@@ -109,17 +109,15 @@ void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties 
   }
   if (strcmp(buf, "turnoff") == 0) {
     uint8_t sst = config.store.smartstart;
-    config.setDspOn(0);
-    player.mode = STOPPED;
-    telnet.info();
-    delay(100);
+    player.stop();
     config.store.smartstart = sst;
     config.save();
+    config.setDspOn(0);
     return;
   }
   if (strcmp(buf, "turnon") == 0) {
     config.setDspOn(1);
-    if (config.store.smartstart == 1) player.request.station = config.store.lastStation;
+    if (config.store.smartstart == 1) player.play(config.store.lastStation);
     return;
   }
   int volume;
